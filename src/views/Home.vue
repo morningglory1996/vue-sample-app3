@@ -6,7 +6,7 @@
     <p>Data From Parent Component: {{ number }}</p>
     <input type="text" v-model="message" />
     <button @click="emitData">Emit data to parent component</button>
-    <slot name="home"></slot>
+    <slot name="home" :message="message"></slot>
   </div>
 </template>
 

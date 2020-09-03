@@ -2,12 +2,12 @@
   <div>
     <Header></Header>
     <router-view :number="number" @emit-data="addData">
-      <template v-slot:home>
+      <template #home="slotProps">
         <p>
           Parent number: {{ number }}
           <button @click="increment">+1 Parent Number</button>
         </p>
-        <p>Data from child component: {{ dataFromChild }}</p>
+        <p>Data from child component: {{ slotProps.message }}</p>
       </template>
     </router-view>
   </div>
