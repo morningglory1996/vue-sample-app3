@@ -3,10 +3,10 @@
     <h1 class="header-text">Header Component</h1>
     <ul class="nav-list">
       <li class="nav-list-item">
-        <router-link to="/">Home</router-link>
+        <router-link to="/" active-class="active" exact>Home</router-link>
       </li>
       <li class="nav-list-item">
-        <router-link to="/user">User</router-link>
+        <router-link to="/user" active-class="active" exact>User</router-link>
       </li>
     </ul>
   </header>
@@ -24,9 +24,11 @@ header {
   margin: 0 auto;
   background-color: gray;
 }
+
 .header-text {
   font-size: 30px;
 }
+
 .nav-list {
   text-align: center;
   padding: 10px 0;
@@ -38,5 +40,13 @@ header {
   display: inline-block;
   margin: 0 20px;
   cursor: pointer;
+}
+
+.nav-list-item a {
+  color: black;
+}
+
+.active {
+  font-weight: bold;
 }
 </style>

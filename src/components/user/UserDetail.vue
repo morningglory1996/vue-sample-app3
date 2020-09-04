@@ -5,6 +5,10 @@
     <p>First Name: {{ profileData.firstName }}</p>
     <p>Last Name: {{ profileData.lastName }}</p>
     <p>Age: {{ profileData.age }}</p>
+    <p>
+      Hobbies:
+      <span v-for="hobby in profileData.hobbies" :key="hobby">{{ hobby }}</span>
+    </p>
   </div>
 </template>
 <script>
@@ -16,5 +20,9 @@ export default {
 <style scoped>
 div {
   background-color: tomato;
+}
+
+span {
+  margin: 5px;
 }
 </style>

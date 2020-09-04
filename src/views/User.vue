@@ -1,16 +1,10 @@
 <template>
   <div class="user-main">
-    <h2>User pages</h2>
+    <h2>USER</h2>
     <button @click="selectedTabs = 'UserProfile'">User Profile</button>
     <button @click="selectedTabs = 'UserDetail'">User Detail</button>
-    <UserProfile
-      v-show="selectedTabs === 'UserProfile'"
-      @updateProfile="addProfileData"
-    ></UserProfile>
-    <UserDetail
-      :profileData="profileData"
-      v-show="selectedTabs === 'UserDetail'"
-    ></UserDetail>
+    <UserProfile v-show="selectedTabs === 'UserProfile'" @updateProfile="addProfileData"></UserProfile>
+    <UserDetail :profileData="profileData" v-show="selectedTabs === 'UserDetail'"></UserDetail>
   </div>
 </template>
 
@@ -27,9 +21,11 @@ export default {
         firstName: "",
         lastName: "",
         age: null,
+        hobbies: [],
       },
     };
   },
+  computed: {},
   methods: {
     addProfileData(data) {
       this.profileData = { ...data };
