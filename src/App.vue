@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Header></Header>
+    <router-view name="header"></router-view>
     <transition :enter-active-class="activeClass" mode="out-in">
-      <router-view :number="number" @emit-data="addData">
+      <router-view name="main" :number="number" @emit-data="addData">
         <template #home="slotProps">
           <p>
             Parent number: {{ number }}
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import Header from "./components/Header";
-
 export default {
   data() {
     return {
@@ -42,9 +40,6 @@ export default {
     addData(data) {
       this.dataFromChild = data;
     },
-  },
-  components: {
-    Header,
   },
 };
 </script>

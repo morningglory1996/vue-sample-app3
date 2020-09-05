@@ -1,12 +1,12 @@
 <template>
   <header>
-    <h1 class="header-text">Header Component</h1>
+    <h1 class="header-text">Home Header Component</h1>
     <ul class="nav-list">
       <li class="nav-list-item">
         <router-link to="/" active-class="active" exact>Home</router-link>
       </li>
       <li class="nav-list-item">
-        <router-link to="/user" active-class="active" exact>User</router-link>
+        <router-link to="/user">User</router-link>
       </li>
     </ul>
   </header>

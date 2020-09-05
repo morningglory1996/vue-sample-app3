@@ -78,17 +78,35 @@ export default {
         age: this.age,
         hobbies: this.hobbies,
       };
-      this.$emit("updateProfile", profileData);
+      this.$store.dispatch("updateProfile", profileData);
+      this.firstName = null;
+      this.lastName = null;
+      this.age = null;
+      this.hobby = null;
+      this.hobbies = [];
     },
     addHobbies() {
       if (this.hobby) {
         this.hobbies.push(this.hobby);
       }
-      this.hobby = "";
     },
     removeHobby(index) {
       this.hobbies.splice(index, 1);
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    if (
+      this.firstName ||
+      this.lastName ||
+      this.age ||
+      this.hobby ||
+      this.hobbies.length > 0
+    ) {
+      const isLeave = window.confirm("Are you leaving the page?");
+      isLeave ? next() : next(false);
+    } else {
+      next();
+    }
   },
 };
 </script>

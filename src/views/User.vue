@@ -1,39 +1,33 @@
 <template>
   <div class="user-main">
     <h2>USER</h2>
-    <button @click="selectedTabs = 'UserProfile'">User Profile</button>
-    <button @click="selectedTabs = 'UserDetail'">User Detail</button>
-    <UserProfile v-show="selectedTabs === 'UserProfile'" @updateProfile="addProfileData"></UserProfile>
-    <UserDetail :profileData="profileData" v-show="selectedTabs === 'UserDetail'"></UserDetail>
+    <router-link
+      :to="{ name: 'user-id-detail', params: { id: userId }}"
+      active-class="active"
+    >User Detail</router-link>
+    <router-link
+      :to="{ name: 'user-id-profile', params: { id: userId }}"
+      active-class="active"
+    >Profile Update</router-link>
+    <BackTransition>
+      <router-view></router-view>
+    </BackTransition>
   </div>
 </template>
 
 <script>
-import UserProfile from "../components/user/UserProfile";
-import UserDetail from "../components/user/UserDetail";
+import BackTransition from "../components/transitions/BackTransition.vue";
 
 export default {
   data() {
     return {
+      userId: 1,
       selectedTabs: "UserProfile",
-      profileData: {
-        gender: null,
-        firstName: "",
-        lastName: "",
-        age: null,
-        hobbies: [],
-      },
     };
   },
   computed: {},
-  methods: {
-    addProfileData(data) {
-      this.profileData = { ...data };
-    },
-  },
   components: {
-    UserProfile,
-    UserDetail,
+    BackTransition,
   },
 };
 </script>
@@ -43,5 +37,14 @@ export default {
   margin: auto;
   text-align: center;
   background-color: yellowgreen;
+}
+
+a {
+  margin: 5px;
+  color: black;
+}
+
+.active {
+  font-weight: bold;
 }
 </style>
