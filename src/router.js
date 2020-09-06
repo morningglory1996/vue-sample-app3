@@ -11,6 +11,8 @@ const UserProfile = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserProfile.vue");
 const UserDetail = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserDetail.vue");
+const SignUp = () => import("./views/SignUp");
+const Login = () => import("./views/Login");
 
 Vue.use(Router);
 
@@ -45,6 +47,20 @@ export default new Router({
           name: "user-id-detail",
         },
       ],
+    },
+    {
+      path: "/sign-up",
+      components: {
+        main: SignUp,
+        header: HeaderHome,
+      },
+    },
+    {
+      path: "/login",
+      components: {
+        main: Login,
+        header: HeaderHome,
+      },
     },
     {
       path: "*",

@@ -6,6 +6,17 @@
         <router-link to="/" active-class="active" exact>Home</router-link>
       </li>
       <li class="nav-list-item">
+        <router-link to="/sign-up" active-class="active" exact
+          >Sign up</router-link
+        >
+      </li>
+      <li class="nav-list-item">
+        <router-link to="/login" active-class="active" exact>Login</router-link>
+      </li>
+      <li class="nav-list-item">
+        <span @click="logout" class="logout">Logout</span>
+      </li>
+      <li class="nav-list-item">
         <router-link to="/user">User</router-link>
       </li>
     </ul>
@@ -13,7 +24,13 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+    },
+  },
+};
 </script>
 
 <style scoped>
