@@ -3,7 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store/index";
 import config from "../config";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 Vue.config.productionTip = false;
 
@@ -19,16 +21,18 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-router.beforeEach((to, from, next) => {
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      console.log("loginしています");
-      next();
-    } else {
-      console.log("loginしていません");
-      next();
-    }
-  });
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    const user = firebase.auth().currentUser;
+    const userData = {
+      userId: user.uid,
+      isAuthenticated: true,
+    };
+    store.dispatch("setUserData", userData);
+    store.dispatch("getUserProfile", user.uid);
+  } else {
+    store.dispatch("setUserData", {});
+  }
 });
 
 new Vue({

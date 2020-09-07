@@ -5,19 +5,17 @@
       <li class="nav-list-item">
         <router-link to="/" active-class="active" exact>Home</router-link>
       </li>
-      <li class="nav-list-item">
-        <router-link to="/sign-up" active-class="active" exact
-          >Sign up</router-link
-        >
+      <li class="nav-list-item" v-if="!isAuthenticated">
+        <router-link to="/sign-up" active-class="active" exact>Sign up</router-link>
       </li>
-      <li class="nav-list-item">
-        <router-link to="/login" active-class="active" exact>Login</router-link>
+      <li class="nav-list-item" v-if="!isAuthenticated">
+        <router-link to="/login" v-if="!isAuthenticated" active-class="active" exact>Login</router-link>
       </li>
-      <li class="nav-list-item">
+      <li class="nav-list-item" v-if="isAuthenticated">
         <span @click="logout" class="logout">Logout</span>
       </li>
-      <li class="nav-list-item">
-        <router-link to="/user">User</router-link>
+      <li class="nav-list-item" v-if="isAuthenticated">
+        <router-link to="/user" active-class="active">User</router-link>
       </li>
     </ul>
   </header>
@@ -25,6 +23,11 @@
 
 <script>
 export default {
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters.userData.isAuthenticated;
+    },
+  },
   methods: {
     logout() {
       this.$store.dispatch("logout");

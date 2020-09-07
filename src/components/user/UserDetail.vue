@@ -1,15 +1,17 @@
 <template>
   <div>
     <h3>User details</h3>
-    <p>Gender: {{ profileDetail.gender }}</p>
-    <p>First Name: {{ profileDetail.firstName }}</p>
-    <p>Last Name: {{ profileDetail.lastName }}</p>
-    <p>Age: {{ profileDetail.age }}</p>
+    <p>Gender: {{ userData.gender }}</p>
+    <p>First Name: {{ userData.firstName }}</p>
+    <p>Last Name: {{ userData.lastName }}</p>
+    <p>Age: {{ userData.age }}</p>
     <p>
       Hobbies:
-      <span v-for="hobby in profileDetail.hobbies" :key="hobby">{{
+      <span v-for="hobby in userData.hobbies" :key="hobby">
+        {{
         hobby
-      }}</span>
+        }}
+      </span>
     </p>
   </div>
 </template>
@@ -18,8 +20,9 @@ import { mapGetters } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["profileDetail"]),
+    ...mapGetters(["userData"]),
   },
+  methods: {},
 };
 </script>
 

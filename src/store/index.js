@@ -1,72 +1,88 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import router from "../router";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    profileData: {
+    userData: {
+      userId: null,
+      username: null,
       gender: null,
       firstName: null,
       lastName: null,
       age: null,
       hobbies: [],
-    },
-    userData: {
-      userId: null,
-      userName: null,
+      isAuthenticated: false,
     },
   },
   getters: {
-    profileDetail: (state) => state.profileData,
+    userData: (state) => state.userData,
   },
   mutations: {
-    updateProfile(state, profileData) {
-      state.profileData = { ...profileData };
+    updateUserData(state, updateData) {
+      state.userData = { ...state.userData, ...updateData };
     },
-    addUserId(state, userId) {
-      state.userId = userId;
+    setUserData(state, userData) {
+      state.userData = { ...userData };
     },
   },
   actions: {
-    updateProfile(context, profileData) {
-      setTimeout(() => {
-        context.commit("updateProfile", profileData);
-      }, 5000);
+    async signUp(context, userData) {
+      try {
+        const response = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(userData.email, userData.password);
+        router.push("/user/" + response.user.uid + "/detail");
+      } catch (err) {
+        alert("SignUp falied", err);
+      }
     },
-    signUp(context, userData) {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(userData.email, userData.password)
-        .then((res) => {
-          res.user.updateProfile({
-            displayName: userData.username,
+    async login(context, userData) {
+      try {
+        const response = await firebase
+          .auth()
+          .signInWithEmailAndPassword(userData.email, userData.password);
+        router.push("/user/" + response.user.uid + "/detail");
+      } catch (err) {
+        alert("Login falied", err);
+      }
+    },
+    async logout() {
+      await firebase.auth().signOut();
+      router.push("/");
+    },
+    setUserData(context, userData) {
+      context.commit("setUserData", userData);
+    },
+    async updateProfile(context, updateData) {
+      try {
+        const userId = context.getters.userData.userId;
+        const db = firebase.firestore();
+        await db
+          .collection("users")
+          .doc(userId)
+          .set({
+            ...updateData,
           });
-          context.commit("addUserId", res.user.uid);
-          router.push("/user/1/detail");
-        })
-        .catch((err) => {
-          alert("Sign up falied", err);
-        });
+        context.commit("updateUserData", updateData);
+        alert("Update success");
+      } catch (err) {
+        alert("Update failed", err);
+      }
     },
-    login(context, userData) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(userData.email, userData.password)
-        .then((res) => {
-          console.log(res);
-          context.commit("addUserId", res.user.uid);
-          router.push("/user/1/detail");
-        })
-        .catch((err) => {
-          alert("Login falied", err);
-        });
-    },
-    logout() {
-      firebase.auth().signOut();
-      alert("Logout");
+    async getUserProfile(context, userId) {
+      try {
+        const db = firebase.firestore();
+        const docRef = db.collection("users").doc(userId);
+        const doc = await docRef.get();
+        context.commit("updateUserData", doc.data());
+      } catch (err) {
+        alert("Failed to get userdata", err);
+      }
     },
   },
 });

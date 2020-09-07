@@ -10,12 +10,6 @@
       </p>
 
       <p>
-        <label for="text">User name:</label>
-        <br />
-        <input type="text" id="username" v-model="username" required />
-      </p>
-
-      <p>
         <label for="password">Password: (at least 6 characters.)</label>
         <br />
         <input type="password" id="password" v-model="password" required />
@@ -24,12 +18,7 @@
       <p>
         <label for="confirm-password">Confirm password:</label>
         <br />
-        <input
-          type="password"
-          id="confirm-password"
-          v-model.lazy="confirmPassword"
-          required
-        />
+        <input type="password" id="confirm-password" v-model.lazy="confirmPassword" required />
       </p>
 
       <button type="submit">Sign up</button>
@@ -42,7 +31,6 @@ export default {
   data() {
     return {
       email: "",
-      username: "",
       password: "",
       confirmPassword: "",
     };
@@ -52,7 +40,6 @@ export default {
     signUp() {
       let userData = {
         email: this.email,
-        username: this.username,
         password: this.password,
       };
       this.$store.dispatch("signUp", userData);

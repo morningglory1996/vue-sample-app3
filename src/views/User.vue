@@ -1,6 +1,6 @@
 <template>
   <div class="user-main">
-    <h2>USER</h2>
+    <h2>Hello {{ userName ? userName : 'User' }}</h2>
     <router-link
       :to="{ name: 'user-id-detail', params: { id: userId }}"
       active-class="active"
@@ -21,11 +21,17 @@ import BackTransition from "../components/transitions/BackTransition.vue";
 export default {
   data() {
     return {
-      userId: 1,
       selectedTabs: "UserProfile",
     };
   },
-  computed: {},
+  computed: {
+    userId() {
+      return this.$store.getters.userData.userId;
+    },
+    userName() {
+      return this.$store.getters.userData.firstName;
+    },
+  },
   components: {
     BackTransition,
   },

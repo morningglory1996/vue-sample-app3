@@ -71,14 +71,14 @@ export default {
   },
   methods: {
     updateProfile() {
-      let profileData = {
+      let updateData = {
         gender: this.gender,
         firstName: this.firstName,
         lastName: this.lastName,
         age: this.age,
         hobbies: this.hobbies,
       };
-      this.$store.dispatch("updateProfile", profileData);
+      this.$store.dispatch("updateProfile", updateData);
       this.firstName = null;
       this.lastName = null;
       this.age = null;
@@ -88,6 +88,7 @@ export default {
     addHobbies() {
       if (this.hobby) {
         this.hobbies.push(this.hobby);
+        this.hobby = "";
       }
     },
     removeHobby(index) {

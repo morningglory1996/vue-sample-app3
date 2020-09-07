@@ -1,18 +1,17 @@
 import Vue from "vue";
 import Router from "vue-router";
+import store from "./store";
 
 const Home = () => import(/* webpackChunkName: "Home"*/ "./views/Home.vue");
 const User = () => import(/* webpackChunkName: "User"*/ "./views/User");
 const HeaderHome = () =>
   import(/* webpackChunkName: "Home"*/ "./components/header/HeaderHome");
-const HeaderUser = () =>
-  import(/* webpackChunkName: "User"*/ "./components/header/HeaderUser");
 const UserProfile = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserProfile.vue");
 const UserDetail = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserDetail.vue");
-const SignUp = () => import("./views/SignUp");
-const Login = () => import("./views/Login");
+const SignUp = () => import(/* webpackChunkName: "SignUp"*/ "./views/SignUp");
+const Login = () => import(/* webpackChunkName: "Login"*/ "./views/Login");
 
 Vue.use(Router);
 
@@ -28,12 +27,16 @@ export default new Router({
     },
     {
       path: "/user",
-      beforeEnter(to, from, next) {
-        next();
-      },
       components: {
         main: User,
-        header: HeaderUser,
+        header: HeaderHome,
+      },
+      beforeEnter(to, from, next) {
+        if (store.getters.userData.isAuthenticated) {
+          next();
+        } else {
+          next("login");
+        }
       },
       children: [
         {
@@ -54,12 +57,26 @@ export default new Router({
         main: SignUp,
         header: HeaderHome,
       },
+      beforeEnter(to, from, next) {
+        if (store.getters.userData.isAuthenticated) {
+          next("/");
+        } else {
+          next();
+        }
+      },
     },
     {
       path: "/login",
       components: {
         main: Login,
         header: HeaderHome,
+      },
+      beforeEnter(to, from, next) {
+        if (store.getters.userData.isAuthenticated) {
+          next("/");
+        } else {
+          next();
+        }
       },
     },
     {
