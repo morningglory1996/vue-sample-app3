@@ -8,16 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    userData: {
-      userId: null,
-      username: null,
-      gender: null,
-      firstName: null,
-      lastName: null,
-      age: null,
-      hobbies: [],
-      isAuthenticated: false,
-    },
+    userData: {},
   },
   getters: {
     userData: (state) => state.userData,
@@ -38,7 +29,7 @@ export default new Vuex.Store({
           .createUserWithEmailAndPassword(userData.email, userData.password);
         router.push("/user/" + response.user.uid + "/detail");
       } catch (err) {
-        alert("SignUp falied", err);
+        alert(err);
       }
     },
     async login(context, userData) {
@@ -48,12 +39,12 @@ export default new Vuex.Store({
           .signInWithEmailAndPassword(userData.email, userData.password);
         router.push("/user/" + response.user.uid + "/detail");
       } catch (err) {
-        alert("Login falied", err);
+        alert(err);
       }
     },
     async logout() {
       await firebase.auth().signOut();
-      router.push("/");
+      router.push("login");
     },
     setUserData(context, userData) {
       context.commit("setUserData", userData);
@@ -71,7 +62,7 @@ export default new Vuex.Store({
         context.commit("updateUserData", updateData);
         alert("Update success");
       } catch (err) {
-        alert("Update failed", err);
+        alert(err);
       }
     },
     async getUserProfile(context, userId) {
@@ -79,10 +70,20 @@ export default new Vuex.Store({
         const db = firebase.firestore();
         const docRef = db.collection("users").doc(userId);
         const doc = await docRef.get();
+        if (!doc.exists) return;
         context.commit("updateUserData", doc.data());
       } catch (err) {
-        alert("Failed to get userdata", err);
+        alert(err);
       }
+    },
+    signInWithGoogle() {
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .catch(function(error) {
+          alert(error);
+        });
     },
   },
 });

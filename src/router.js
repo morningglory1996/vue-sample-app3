@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import store from "./store";
+import firebase from "firebase/app";
 
 const Home = () => import(/* webpackChunkName: "Home"*/ "./views/Home.vue");
 const User = () => import(/* webpackChunkName: "User"*/ "./views/User");
@@ -32,11 +32,13 @@ export default new Router({
         header: HeaderHome,
       },
       beforeEnter(to, from, next) {
-        if (store.getters.userData.isAuthenticated) {
-          next();
-        } else {
-          next("login");
-        }
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            next();
+          } else {
+            next("login");
+          }
+        });
       },
       children: [
         {
@@ -58,11 +60,13 @@ export default new Router({
         header: HeaderHome,
       },
       beforeEnter(to, from, next) {
-        if (store.getters.userData.isAuthenticated) {
-          next("/");
-        } else {
-          next();
-        }
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            next("/");
+          } else {
+            next();
+          }
+        });
       },
     },
     {
@@ -72,11 +76,13 @@ export default new Router({
         header: HeaderHome,
       },
       beforeEnter(to, from, next) {
-        if (store.getters.userData.isAuthenticated) {
-          next("/");
-        } else {
-          next();
-        }
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            next("/");
+          } else {
+            next();
+          }
+        });
       },
     },
     {

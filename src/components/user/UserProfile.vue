@@ -52,7 +52,7 @@
 export default {
   data() {
     return {
-      gender: "male",
+      gender: null,
       firstName: null,
       lastName: null,
       age: null,

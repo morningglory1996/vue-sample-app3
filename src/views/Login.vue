@@ -17,6 +17,10 @@
 
       <button type="submit">Login</button>
     </form>
+
+    <p>or</p>
+
+    <button @click="signInWithGoogle">Login with Google</button>
   </div>
 </template>
 
@@ -35,6 +39,9 @@ export default {
         password: this.password,
       };
       this.$store.dispatch("login", userData);
+    },
+    signInWithGoogle() {
+      this.$store.dispatch("signInWithGoogle");
     },
   },
 };
