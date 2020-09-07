@@ -2,6 +2,11 @@
   <div>
     <h3>User profile</h3>
     <form @submit.prevent="updateProfile">
+      <p>
+        <label for="userImage">User Image:</label>
+        <input @change="setImageData" type="file" />
+      </p>
+
       <div>
         Gender:
         <label for="male">Male</label>
@@ -52,6 +57,7 @@
 export default {
   data() {
     return {
+      image: null,
       gender: null,
       firstName: null,
       lastName: null,
@@ -72,6 +78,7 @@ export default {
   methods: {
     updateProfile() {
       let updateData = {
+        image: this.image,
         gender: this.gender,
         firstName: this.firstName,
         lastName: this.lastName,
@@ -93,6 +100,9 @@ export default {
     },
     removeHobby(index) {
       this.hobbies.splice(index, 1);
+    },
+    setImageData(image) {
+      this.image = image.target.files[0];
     },
   },
   beforeRouteLeave(to, from, next) {

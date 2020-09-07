@@ -1,7 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import firebase from "firebase/app";
+import "firebase/firestore";
 import "firebase/auth";
+import "firebase/storage";
 import router from "../router";
 
 Vue.use(Vuex);
@@ -50,8 +52,20 @@ export default new Vuex.Store({
       context.commit("setUserData", userData);
     },
     async updateProfile(context, updateData) {
+      const userId = context.getters.userData.userId;
       try {
-        const userId = context.getters.userData.userId;
+        if (updateData.image) {
+          const image = updateData.image;
+          const storageRef = firebase
+            .storage()
+            .ref("users/" + userId + "/images/" + image.name);
+          await storageRef.put(image);
+          const imageUrl = await firebase
+            .storage()
+            .ref("users/" + userId + "/images/" + image.name)
+            .getDownloadURL();
+          updateData.image = imageUrl;
+        }
         const db = firebase.firestore();
         await db
           .collection("users")

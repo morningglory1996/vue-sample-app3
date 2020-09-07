@@ -1,5 +1,6 @@
 <template>
   <div>
+    <img :src="userData.image" alt="user-image" />
     <h3>User details</h3>
     <p>Gender: {{ userData.gender }}</p>
     <p>First Name: {{ userData.firstName }}</p>
@@ -27,6 +28,13 @@ export default {
 </script>
 
 <style scoped>
+img {
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+}
+
 div {
   background-color: tomato;
 }
