@@ -30,6 +30,7 @@ firebase.auth().onAuthStateChanged((user) => {
     };
     store.dispatch("setUserData", userData);
     store.dispatch("getUserProfile", user.uid);
+    store.dispatch("onSnapshot");
   } else {
     store.dispatch("setUserData", {});
   }

@@ -12,6 +12,7 @@ const UserDetail = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserDetail.vue");
 const SignUp = () => import(/* webpackChunkName: "SignUp"*/ "./views/SignUp");
 const Login = () => import(/* webpackChunkName: "Login"*/ "./views/Login");
+const Chat = () => import(/* webpackChunkName: "Chat"*/ "./views/Chat");
 
 Vue.use(Router);
 
@@ -81,6 +82,22 @@ export default new Router({
             next("/");
           } else {
             next();
+          }
+        });
+      },
+    },
+    {
+      path: "/chat",
+      components: {
+        main: Chat,
+        header: HeaderHome,
+      },
+      beforeEnter(to, from, next) {
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            next();
+          } else {
+            next("/");
           }
         });
       },

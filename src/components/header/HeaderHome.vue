@@ -17,6 +17,9 @@
       <li class="nav-list-item" v-if="isAuthenticated">
         <router-link to="/user" active-class="active">User</router-link>
       </li>
+      <li class="nav-list-item" v-if="isAuthenticated">
+        <router-link to="/chat" active-class="active">Chat</router-link>
+      </li>
     </ul>
   </header>
 </template>

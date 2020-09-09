@@ -11,9 +11,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     userData: {},
+    messages: [],
   },
   getters: {
     userData: (state) => state.userData,
+    messages: (state) => state.messages,
   },
   mutations: {
     updateUserData(state, updateData) {
@@ -21,6 +23,9 @@ export default new Vuex.Store({
     },
     setUserData(state, userData) {
       state.userData = { ...userData };
+    },
+    setMessages(state, messages) {
+      state.messages = messages;
     },
   },
   actions: {
@@ -91,13 +96,56 @@ export default new Vuex.Store({
       }
     },
     signInWithGoogle() {
-      var provider = new firebase.auth.GoogleAuthProvider();
+      const provider = new firebase.auth.GoogleAuthProvider();
       firebase
         .auth()
         .signInWithPopup(provider)
         .catch(function(error) {
           alert(error);
         });
+    },
+    async getMessages(context) {
+      try {
+        const db = firebase.firestore();
+        const response = await db
+          .collection("messages")
+          .orderBy("createdAt", "asc")
+          .limit(50)
+          .get();
+        let messages = [];
+        response.forEach((doc) => {
+          const data = doc.data();
+          const boolean = data.uid === context.getters.userData.userId;
+          messages.push({
+            userId: data.uid,
+            message: data.message,
+            createdAt: data.createdAt,
+            isMyMessage: boolean,
+          });
+        });
+        context.commit("setMessages", messages);
+      } catch (error) {
+        alert(error);
+      }
+    },
+    onSnapshot(context) {
+      const db = firebase.firestore();
+      db.collection("messages").onSnapshot(() => {
+        context.dispatch("getMessages");
+      });
+    },
+    async sendMessage(context, message) {
+      try {
+        const db = firebase.firestore();
+        const now = new Date();
+        await db.collection("messages").add({
+          message: message,
+          uid: context.getters.userData.userId,
+          createdAt: now,
+        });
+      } catch (error) {
+        alert("send message faild");
+      }
     },
   },
 });
