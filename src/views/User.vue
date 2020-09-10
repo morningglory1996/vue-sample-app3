@@ -1,6 +1,6 @@
 <template>
   <div class="user-main">
-    <h2>Hello {{ userName ? userName : 'User' }}</h2>
+    <h2>Hello {{ displayName }}</h2>
     <router-link
       :to="{ name: 'user-id-detail', params: { id: userId }}"
       active-class="active"
@@ -28,8 +28,8 @@ export default {
     userId() {
       return this.$store.getters.userData.userId;
     },
-    userName() {
-      return this.$store.getters.userData.firstName;
+    displayName() {
+      return this.$store.getters.userData.displayName;
     },
   },
   components: {

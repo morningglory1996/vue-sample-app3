@@ -26,10 +26,11 @@ firebase.auth().onAuthStateChanged((user) => {
     const user = firebase.auth().currentUser;
     const userData = {
       userId: user.uid,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
       isAuthenticated: true,
     };
     store.dispatch("setUserData", userData);
-    store.dispatch("getUserProfile", user.uid);
     store.dispatch("onSnapshot");
   } else {
     store.dispatch("setUserData", {});

@@ -4,6 +4,12 @@
 
     <form @submit.prevent="signUp">
       <p>
+        <label for="userName">Username:</label>
+        <br />
+        <input type="text" id="userName" v-model="userName" required />
+      </p>
+
+      <p>
         <label for="email">Email:</label>
         <br />
         <input type="email" id="email" v-model="email" required />
@@ -34,6 +40,7 @@
 export default {
   data() {
     return {
+      userName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -43,13 +50,14 @@ export default {
   methods: {
     signUp() {
       let userData = {
+        displayName: this.userName,
         email: this.email,
         password: this.password,
       };
       this.$store.dispatch("signUp", userData);
     },
     signInWithGoogle() {
-      this.$store.dispatch("signUpWithGoogle");
+      this.$store.dispatch("signInWithGoogle");
     },
   },
 };

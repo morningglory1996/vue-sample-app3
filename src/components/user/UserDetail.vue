@@ -1,29 +1,48 @@
 <template>
   <div>
-    <img :src="userData.image" alt="user-image" />
-    <h3>User details</h3>
-    <p>Gender: {{ userData.gender }}</p>
-    <p>First Name: {{ userData.firstName }}</p>
-    <p>Last Name: {{ userData.lastName }}</p>
-    <p>Age: {{ userData.age }}</p>
+    <img :src="userData.photoURL" alt="user-image" />
+
     <p>
-      Hobbies:
-      <span v-for="hobby in userData.hobbies" :key="hobby">
-        {{
-        hobby
-        }}
-      </span>
+      <input @change="setPhotoData" type="file" />
     </p>
+
+    <p>
+      <label for="name">change name:</label>
+      <input type="text" id="name" v-model="userName" />
+    </p>
+
+    <button @click="updateProfile" :disabled="!isValid">Save</button>
   </div>
 </template>
-<script>
-import { mapGetters } from "vuex";
 
+<script>
 export default {
-  computed: {
-    ...mapGetters(["userData"]),
+  data() {
+    return {
+      userName: "",
+      photoData: null,
+    };
   },
-  methods: {},
+  computed: {
+    userData() {
+      return this.$store.getters.userData;
+    },
+    isValid() {
+      return !this.userName && !this.photoData ? false : true;
+    },
+  },
+  methods: {
+    setPhotoData(data) {
+      this.photoData = data.target.files[0];
+    },
+    updateProfile() {
+      const updateData = {
+        displayName: this.userName,
+        photoURL: this.photoData,
+      };
+      this.$store.dispatch("updateProfile", updateData);
+    },
+  },
 };
 </script>
 

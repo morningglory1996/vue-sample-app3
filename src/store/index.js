@@ -31,20 +31,29 @@ export default new Vuex.Store({
   actions: {
     async signUp(context, userData) {
       try {
-        const response = await firebase
+        await firebase
           .auth()
           .createUserWithEmailAndPassword(userData.email, userData.password);
-        router.push("/user/" + response.user.uid + "/detail");
+        const user = firebase.auth().currentUser;
+        await user.updateProfile({
+          displayName: userData.displayName,
+          photoURL:
+            "https://firebasestorage.googleapis.com/v0/b/vue-app-test-7fc5d.appspot.com/o/delault%20user%2F8.png?alt=media&token=f12cc7ba-e60a-40c8-bf7b-dfa4901f4d95",
+        });
+        const userObject = {
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        };
+        context.commit("updateUserData", userObject);
       } catch (err) {
         alert(err);
       }
     },
     async login(context, userData) {
       try {
-        const response = await firebase
+        await firebase
           .auth()
           .signInWithEmailAndPassword(userData.email, userData.password);
-        router.push("/user/" + response.user.uid + "/detail");
       } catch (err) {
         alert(err);
       }
@@ -57,27 +66,27 @@ export default new Vuex.Store({
       context.commit("setUserData", userData);
     },
     async updateProfile(context, updateData) {
-      const userId = context.getters.userData.userId;
       try {
-        if (updateData.image) {
-          const image = updateData.image;
+        const user = firebase.auth().currentUser;
+        if (!updateData.displayName) {
+          delete updateData.displayName;
+        }
+        if (!updateData.photoURL) {
+          delete updateData.photoURL;
+        } else {
+          const file = updateData.photoURL;
           const storageRef = firebase
             .storage()
-            .ref("users/" + userId + "/images/" + image.name);
-          await storageRef.put(image);
-          const imageUrl = await firebase
+            .ref("users/" + user.uid + "/images/" + file.name);
+          await storageRef.put(file);
+          updateData.photoURL = await firebase
             .storage()
-            .ref("users/" + userId + "/images/" + image.name)
+            .ref("users/" + user.uid + "/images/" + file.name)
             .getDownloadURL();
-          updateData.image = imageUrl;
         }
-        const db = firebase.firestore();
-        await db
-          .collection("users")
-          .doc(userId)
-          .set({
-            ...updateData,
-          });
+        await user.updateProfile({
+          ...updateData,
+        });
         context.commit("updateUserData", updateData);
         alert("Update success");
       } catch (err) {
@@ -114,10 +123,13 @@ export default new Vuex.Store({
           .get();
         let messages = [];
         response.forEach((doc) => {
+          const user = firebase.auth().currentUser;
           const data = doc.data();
-          const boolean = data.uid === context.getters.userData.userId;
+          const boolean = data.uid === user.uid;
           messages.push({
             userId: data.uid,
+            displayName: data.displayName,
+            photoURL: data.photoURL,
             message: data.message,
             createdAt: data.createdAt,
             isMyMessage: boolean,
@@ -138,9 +150,12 @@ export default new Vuex.Store({
       try {
         const db = firebase.firestore();
         const now = new Date();
+        const user = firebase.auth().currentUser;
         await db.collection("messages").add({
+          displayName: user.displayName,
+          photoURL: user.photoURL,
           message: message,
-          uid: context.getters.userData.userId,
+          uid: user.uid,
           createdAt: now,
         });
       } catch (error) {

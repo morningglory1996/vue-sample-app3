@@ -6,11 +6,17 @@
         :style="{ 'text-align': message.isMyMessage ? 'right' : 'left'}"
         :key="index"
       >
+        <img v-if="!message.isMyMessage" :src="message.photoURL" alt />
+
         <li :class="{ 'my-message ': message.isMyMessage }">{{ message.message }}</li>
-        <p class="time">{{ message.createdAt.toDate().toLocaleString() }}</p>
-        <br />
+
+        <img v-if="message.isMyMessage" :src="message.photoURL" alt />
+        <small>{{ message.displayName }}</small>
+
+        <p class="time">{{ message.createdAt | toLocaleString }}</p>
       </div>
     </ul>
+
     <input type="text" v-model="chatMessage" />
     <button @click="sendMessage">送信</button>
   </div>
@@ -45,7 +51,7 @@ export default {
   },
   filters: {
     toLocaleString(value) {
-      value.toDate().toLocaleString();
+      return value.toDate().toLocaleString();
     },
   },
 };
@@ -57,13 +63,26 @@ ul {
 }
 
 li {
-  margin-top: 5px;
-  padding: 5px;
+  padding: 5px 8px;
   list-style: none;
   color: white;
   background-color: rgb(140, 141, 141);
-  border-radius: 15px;
+  border-radius: 5px;
+  margin: 0 5px;
   display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+small {
+  display: block;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+  border-radius: 25px;
+  vertical-align: middle;
 }
 
 .chat-container {
@@ -78,5 +97,7 @@ li {
 
 .time {
   font-size: 13px;
+  margin: 0;
+  margin-bottom: 8px;
 }
 </style>

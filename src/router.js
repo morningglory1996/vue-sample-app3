@@ -61,9 +61,10 @@ export default new Router({
         header: HeaderHome,
       },
       beforeEnter(to, from, next) {
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            next("/");
+        firebase.auth().onAuthStateChanged((u) => {
+          if (u) {
+            const user = firebase.auth().currentUser;
+            next("/user" + user.uid + "/detail");
           } else {
             next();
           }
@@ -77,9 +78,10 @@ export default new Router({
         header: HeaderHome,
       },
       beforeEnter(to, from, next) {
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            next("/");
+        firebase.auth().onAuthStateChanged((u) => {
+          if (u) {
+            const user = firebase.auth().currentUser;
+            next("/user" + user.uid + "/detail");
           } else {
             next();
           }
