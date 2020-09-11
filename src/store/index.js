@@ -8,6 +8,8 @@ import router from "../router";
 
 Vue.use(Vuex);
 
+let unsubscribe;
+
 export default new Vuex.Store({
   state: {
     userData: {},
@@ -45,8 +47,8 @@ export default new Vuex.Store({
           photoURL: user.photoURL,
         };
         context.commit("updateUserData", userObject);
-      } catch (err) {
-        alert(err);
+      } catch (error) {
+        alert(error);
       }
     },
     async login(context, userData) {
@@ -54,12 +56,13 @@ export default new Vuex.Store({
         await firebase
           .auth()
           .signInWithEmailAndPassword(userData.email, userData.password);
-      } catch (err) {
-        alert(err);
+      } catch (error) {
+        alert(error);
       }
     },
     async logout() {
       await firebase.auth().signOut();
+      unsubscribe();
       router.push("login");
     },
     setUserData(context, userData) {
@@ -89,8 +92,8 @@ export default new Vuex.Store({
         });
         context.commit("updateUserData", updateData);
         alert("Update success");
-      } catch (err) {
-        alert(err);
+      } catch (error) {
+        alert(error);
       }
     },
     async getUserProfile(context, userId) {
@@ -100,12 +103,21 @@ export default new Vuex.Store({
         const doc = await docRef.get();
         if (!doc.exists) return;
         context.commit("updateUserData", doc.data());
-      } catch (err) {
-        alert(err);
+      } catch (error) {
+        alert(error);
       }
     },
     signInWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .catch(function(error) {
+          alert(error);
+        });
+    },
+    signInWithTwitter() {
+      const provider = new firebase.auth.TwitterAuthProvider();
       firebase
         .auth()
         .signInWithPopup(provider)
@@ -127,6 +139,7 @@ export default new Vuex.Store({
           const data = doc.data();
           const boolean = data.uid === user.uid;
           messages.push({
+            messageId: doc.id,
             userId: data.uid,
             displayName: data.displayName,
             photoURL: data.photoURL,
@@ -142,7 +155,7 @@ export default new Vuex.Store({
     },
     onSnapshot(context) {
       const db = firebase.firestore();
-      db.collection("messages").onSnapshot(() => {
+      unsubscribe = db.collection("messages").onSnapshot(() => {
         context.dispatch("getMessages");
       });
     },
@@ -160,6 +173,17 @@ export default new Vuex.Store({
         });
       } catch (error) {
         alert("send message faild");
+      }
+    },
+    async removeMessage(context, messageId) {
+      try {
+        const db = firebase.firestore();
+        await db
+          .collection("messages")
+          .doc(messageId)
+          .delete();
+      } catch (error) {
+        alert(error);
       }
     },
   },

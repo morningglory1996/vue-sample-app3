@@ -33,6 +33,10 @@
     <p>or</p>
 
     <button @click="signInWithGoogle">Sign up with Google</button>
+
+    <br />
+
+    <button @click="signInWithTwitter">Sign up with Twitter</button>
   </div>
 </template>
 
@@ -58,6 +62,9 @@ export default {
     },
     signInWithGoogle() {
       this.$store.dispatch("signInWithGoogle");
+    },
+    signInWithTwitter() {
+      this.$store.dispatch("signInWithTwitter");
     },
   },
 };
