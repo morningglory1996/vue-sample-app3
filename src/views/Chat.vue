@@ -2,10 +2,10 @@
   <div>
     <div class="chat-container">
       <ul v-if="messages">
-        <transition-group @beforeEnter="beforeEnter" @enter="enter">
+        <MessageTransition>
           <div
             v-for="message in messages"
-            :style="{ 'text-align': message.isMyMessage ? 'right' : 'left'}"
+            :style="{ 'text-align': message.isMyMessage ? 'right' : 'left' }"
             :key="message.messageId"
           >
             <img v-if="!message.isMyMessage" :src="message.photoURL" />
@@ -20,33 +20,29 @@
 
             <p class="time">{{ message.createdAt | toLocaleString }}</p>
           </div>
-        </transition-group>
+        </MessageTransition>
       </ul>
     </div>
 
-    <div class="form">
+    <form @submit.prevent="sendMessage" class="form">
       <input type="text" v-model="chatMessage" />
-      <button @click="sendMessage">送信</button>
-    </div>
+      <button type="submit">送信</button>
+    </form>
   </div>
 </template>
 
 <script>
+import MessageTransition from "../components/transitions/MessageTransition.vue";
+
 export default {
   data() {
     return {
-      message: {
-        isMyMessage: false,
-      },
       chatMessage: "",
     };
   },
   computed: {
     messages() {
       return this.$store.getters.messages;
-    },
-    userId() {
-      return this.$store.getters.userData.userId;
     },
   },
   methods: {
@@ -64,20 +60,6 @@ export default {
       if (!result) return;
       this.$store.dispatch("removeMessage", messageId);
     },
-    beforeEnter(el) {
-      el.style.transform = "scale(0)";
-    },
-    enter(el, done) {
-      let scale = 0;
-      const interval = setInterval(() => {
-        el.style.transform = `scale(${scale})`;
-        scale += 0.1;
-        if (scale > 1) {
-          clearInterval(interval);
-          done();
-        }
-      }, 10);
-    },
   },
   updated() {
     const container = this.$el.querySelector(".chat-container");
@@ -87,6 +69,9 @@ export default {
     toLocaleString(value) {
       return value.toDate().toLocaleString();
     },
+  },
+  components: {
+    MessageTransition,
   },
 };
 </script>
@@ -119,7 +104,7 @@ img {
 
 .chat-container {
   margin: 10px auto;
-  height: 600px;
+  height: 500px;
   background-color: rgb(90, 141, 143);
   padding: 0 8px;
   overflow-y: scroll;
@@ -140,7 +125,6 @@ img {
 
 .form {
   text-align: center;
-  width: 500px;
   margin: auto;
 }
 

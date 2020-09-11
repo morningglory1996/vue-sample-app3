@@ -3,11 +3,16 @@
     <img :src="userData.photoURL" alt="user-image" />
 
     <p>
-      <input @change="setPhotoData" type="file" />
+      <input
+        @change="setPhotoData"
+        type="file"
+        accept=".png, .jpg, .jpeg"
+        id="file"
+      />
+      <button @click="removePhotoData" v-if="photoData">clear</button>
     </p>
 
     <p>
-      <label for="name">change name:</label>
       <input type="text" id="name" v-model="userName" />
     </p>
 
@@ -32,15 +37,28 @@ export default {
     },
   },
   methods: {
-    setPhotoData(data) {
-      this.photoData = data.target.files[0];
+    setPhotoData(e) {
+      if (e.target.files[0].size > 3000000) {
+        alert("File size exceeds the limit.");
+        e.currentTarget.value = "";
+        return;
+      }
+      this.photoData = e.target.files[0];
     },
-    updateProfile() {
+    removePhotoData() {
+      this.$el.querySelector("#file").value = "";
+      this.photoData = "";
+    },
+    async updateProfile() {
+      const vm = this;
       const updateData = {
+        vm: vm,
         displayName: this.userName,
         photoURL: this.photoData,
       };
-      this.$store.dispatch("updateProfile", updateData);
+      await this.$store.dispatch("updateProfile", updateData);
+      this.userName = "";
+      this.removePhotoData();
     },
   },
 };

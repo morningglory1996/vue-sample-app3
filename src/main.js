@@ -6,8 +6,16 @@ import config from "../config";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import Toasted from "vue-toasted";
 
 Vue.config.productionTip = false;
+
+const toastOptions = {
+  duration: 2000,
+  singleton: true,
+};
+
+Vue.use(Toasted, toastOptions);
 
 var firebaseConfig = {
   apiKey: config.apiKey,

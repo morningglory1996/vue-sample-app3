@@ -6,10 +6,18 @@
         <router-link to="/" active-class="active" exact>Home</router-link>
       </li>
       <li class="nav-list-item" v-if="!isAuthenticated">
-        <router-link to="/sign-up" active-class="active" exact>Sign up</router-link>
+        <router-link to="/sign-up" active-class="active" exact
+          >Sign up</router-link
+        >
       </li>
       <li class="nav-list-item" v-if="!isAuthenticated">
-        <router-link to="/login" v-if="!isAuthenticated" active-class="active" exact>Login</router-link>
+        <router-link
+          to="/login"
+          v-if="!isAuthenticated"
+          active-class="active"
+          exact
+          >Login</router-link
+        >
       </li>
       <li class="nav-list-item" v-if="isAuthenticated">
         <span @click="logout" class="logout">Logout</span>

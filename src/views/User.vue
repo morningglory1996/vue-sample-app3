@@ -2,13 +2,10 @@
   <div class="user-main">
     <h2>Hello {{ displayName }}</h2>
     <router-link
-      :to="{ name: 'user-id-detail', params: { id: userId }}"
+      :to="{ name: 'user-id-detail', params: { id: userId } }"
       active-class="active"
-    >User Detail</router-link>
-    <router-link
-      :to="{ name: 'user-id-profile', params: { id: userId }}"
-      active-class="active"
-    >Profile Update</router-link>
+      >User Detail</router-link
+    >
     <BackTransition>
       <router-view></router-view>
     </BackTransition>

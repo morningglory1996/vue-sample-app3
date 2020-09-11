@@ -44,7 +44,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 @keyframes slide-in {
   from {
     transform: translateX(100px);
@@ -53,9 +53,5 @@ export default {
   to {
     transform: translateX(0px);
   }
-}
-
-p {
-  text-align: center;
 }
 </style>

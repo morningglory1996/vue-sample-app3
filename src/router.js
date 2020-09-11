@@ -6,8 +6,6 @@ const Home = () => import(/* webpackChunkName: "Home"*/ "./views/Home.vue");
 const User = () => import(/* webpackChunkName: "User"*/ "./views/User");
 const HeaderHome = () =>
   import(/* webpackChunkName: "Home"*/ "./components/header/HeaderHome");
-const UserProfile = () =>
-  import(/* webpackChunkName: "User"*/ "./components/user/UserProfile.vue");
 const UserDetail = () =>
   import(/* webpackChunkName: "User"*/ "./components/user/UserDetail.vue");
 const SignUp = () => import(/* webpackChunkName: "SignUp"*/ "./views/SignUp");
@@ -42,11 +40,6 @@ export default new Router({
         });
       },
       children: [
-        {
-          path: ":id/profile",
-          component: UserProfile,
-          name: "user-id-profile",
-        },
         {
           path: ":id/detail",
           component: UserDetail,
