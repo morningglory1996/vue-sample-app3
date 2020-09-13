@@ -2,7 +2,9 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
+import "firebase/messaging";
 import router from "../../router";
+import config from "../../../config";
 
 let unsubscribe;
 
@@ -36,7 +38,7 @@ const actions = {
       const userObject = {
         displayName: userData.displayName,
         photoURL:
-          "https://firebasestorage.googleapis.com/v0/b/vue-app-test-7fc5d.appspot.com/o/delault%20user%2Fdefalut.png?alt=media&token=61ebfadd-a432-4d79-be92-284f8e449124",
+          "https://firebasestorage.googleapis.com/v0/b/vue-sample-app-eeb9f.appspot.com/o/defalut.png?alt=media&token=4150e302-918d-4d3f-9df8-652137c439cb",
       };
       await user.updateProfile(userObject);
       context.commit("updateUserData", userObject);
@@ -109,6 +111,19 @@ const actions = {
     unsubscribe = db.collection("messages").onSnapshot(() => {
       context.dispatch("getMessages");
     });
+  },
+  notification() {
+    const messaging = firebase.messaging();
+    Notification.requestPermission()
+      .then(() => {
+        console.log("Notification permission granted.");
+        messaging.getToken(config.publicVapidKey).then((token) => {
+          console.log(token);
+        });
+      })
+      .catch((err) => {
+        console.log("Unable to get permission to notify.", err);
+      });
   },
 };
 

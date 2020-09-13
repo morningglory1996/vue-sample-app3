@@ -4,8 +4,7 @@
     <router-link
       :to="{ name: 'user-id-detail', params: { id: userId } }"
       active-class="active"
-      >User Detail</router-link
-    >
+    >User Detail</router-link>
     <BackTransition>
       <router-view></router-view>
     </BackTransition>

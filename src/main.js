@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import Toasted from "vue-toasted";
+import "./registerServiceWorker";
 
 Vue.config.productionTip = false;
 
@@ -44,6 +45,8 @@ firebase.auth().onAuthStateChanged((user) => {
     store.dispatch("setUserData", {});
   }
 });
+
+store.dispatch("notification");
 
 new Vue({
   router,
