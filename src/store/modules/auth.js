@@ -112,13 +112,40 @@ const actions = {
       context.dispatch("getMessages");
     });
   },
-  notification() {
+  onAuthStateChanged(context) {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        const user = firebase.auth().currentUser;
+        const userData = {
+          userId: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          isAuthenticated: true,
+        };
+        context.dispatch("setUserData", userData);
+        context.dispatch("onSnapshot");
+      } else {
+        context.dispatch("setUserData", {});
+      }
+    });
+  },
+  notification(context) {
     const messaging = firebase.messaging();
+    const db = firebase.firestore();
+    const user = firebase.auth().currentUser;
     Notification.requestPermission()
       .then(() => {
         console.log("Notification permission granted.");
         messaging.getToken(config.publicVapidKey).then((token) => {
-          console.log(token);
+          if (token) {
+            db.collection("fcm_tokens")
+              .doc(token)
+              .set({
+                uid: user.uid,
+              });
+          } else {
+            context.dispatch("notification");
+          }
         });
       })
       .catch((err) => {

@@ -15,6 +15,9 @@
 import BackTransition from "../components/transitions/BackTransition.vue";
 
 export default {
+  created() {
+    this.$store.dispatch("notification");
+  },
   data() {
     return {
       selectedTabs: "UserProfile",
